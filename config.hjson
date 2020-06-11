@@ -1,0 +1,35 @@
+# This file contains the configuration/settings for the generated map
+# Do not change anything left of ':'
+
+{
+    # dimensions of the map
+    height : 10
+    width : 14
+
+    # how open or choke-y the map should be
+    openness : 30
+
+    # minimum distances between player strongholds (e.g. .5 => at least half the map apart)
+    starting_distance : .4
+
+    # number of building per player
+    villages : 5
+    barracks : 2
+    ports : 0
+    towers : 1
+
+    # random key (0 => key will be generated at runtime)
+    key : 5
+
+    # specify which terrains to include in the map (1 = include)
+    terrain : {
+        plains : 1
+        forest : 1
+        mountain : 1
+        sea : 1
+        reef : 0
+        road : 0
+        river : 0
+        shore : 0
+    }
+}
