@@ -5,7 +5,7 @@
     # dimensions of the map
     height : 10
     width : 14
-    land_ratio : .7
+    land_ratio : .8
 
     # how open or choke-y the map should be
     openness : 30
