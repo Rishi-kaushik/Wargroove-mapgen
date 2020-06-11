@@ -5,6 +5,7 @@
     # dimensions of the map
     height : 10
     width : 14
+    land_ratio : .7
 
     # how open or choke-y the map should be
     openness : 30
@@ -18,17 +19,17 @@
     ports : 0
     towers : 1
 
-    # random key (0 => key will be generated at runtime)
-    key : 5
+    # random key/seed (0 => key will be generated at runtime)
+    key : 0
 
     # specify which terrains to include in the map (1 = include)
     terrain : {
         plains : 1
         forest : 1
         mountain : 1
-        sea : 1
+        sea : 0
         reef : 0
-        road : 0
+        road : 1
         river : 0
         shore : 0
     }
