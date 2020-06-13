@@ -199,8 +199,18 @@ def create_land(generated_map, hq_x, hq_y):
     return generated_map, True
 
 
+def remove_lone_sea(generated_map):
+    for y in range(config['height']):
+        for x in range(config['width']):
+            if generated_map[y][x] == terrain_stats['sea'][0] and generate_tile_info(generated_map, y, x)[3] == 0:
+                generated_map[y][x] = terrain_stats['plains'][0]
+    return generated_map
+
+
 if __name__ == '__main__':
     load_config()
     generated_map = generate_initial_map()
     generated_map = add_land(generated_map)
+    if config['remove_lone_sea'] == 1:
+        generated_map = remove_lone_sea(generated_map)
     write_map(generated_map, config['key'])

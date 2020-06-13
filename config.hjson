@@ -7,29 +7,30 @@
     width : 16
 
     # land to sea ratio; not perfect, at 1 does not produce all land :(
-    land_ratio : .7
+    land_ratio : .4
 
-    # how open or choke-y the map should be
+    # how open or choke-y the map should be TODO
     openness : 30
 
-    # minimum distances between player strongholds (e.g. .5 => at least half the map apart)
+    # minimum distances between player strongholds (e.g. .5 => at least half the map apart) TODO
     starting_distance : .4
 
-    # number of building per player
+    # number of building per player TODO
     villages : 5
     barracks : 2
     ports : 0
     towers : 1
 
+    # (1: Recommended) set as 1 to remove any sea tile not adjacent to other sea tiles
+    remove_lone_sea : 0
+
     # random key/seed (0 => key will be generated at runtime)
-    key : 0
+    key : 1187
 
     # specify which terrains to include in the map (1 = include)
     terrain : {
-        plains : 1
         forest : 1
         mountain : 1
-        sea : 0
         reef : 0
         road : 1
         river : 0
