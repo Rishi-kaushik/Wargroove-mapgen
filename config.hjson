@@ -3,9 +3,11 @@
 
 {
     # dimensions of the map
-    height : 10
-    width : 14
-    land_ratio : .8
+    height : 12
+    width : 16
+
+    # land to sea ratio; not perfect, at 1 does not produce all land :(
+    land_ratio : .7
 
     # how open or choke-y the map should be
     openness : 30
