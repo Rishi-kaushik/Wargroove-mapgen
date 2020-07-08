@@ -13,6 +13,7 @@ import numpy as np
     )
     
 '''
+
 terrain_map = {
     'neutral village': ['a'],
     'neutral barracks': ['b'],
@@ -42,66 +43,40 @@ terrain_map = {
     'reef': ['%'],
     'road_1': ['-'],
     'road_2': ['='],
-    'river': ['['],
+    'river': ['{'],
     'shore': ['<'],  # might not use this
 }
 
-movement_info = {
-    'neutral village': 2,
-    'a': 2,
-    'neutral barracks': 2,
-    'b': 2,
-    'neutral tower': 2,
-    'c': 2,
-    'neutral port': 2,
-    'd': 2,
-    'neutral hideout': 2,
-    'V': 2,
-    'p1 village': 2,
-    'e': 2,
-    'p1 barracks': 2,
-    'f': 2,
-    'p1 tower': 2,
-    'g': 2,
-    'p1 port': 2,
-    'h': 2,
-    'p1 hideout': 2,
-    'Q': 2,
-    'p1 stronghold': 2,
-    'i': 2,
-    'p2 village': 2,
-    'j': 2,
-    'p2 barracks': 2,
-    'l': 2,
-    'p2 tower': 2,
-    'm': 2,
-    'p2 port': 2,
-    'n': 2,
-    'p2 hideout': 2,
-    '5': 2,
-    'p2 stronghold': 2,
-    'o': 2,
+# Movement cost for every tile type
+plain_movement = {'foot': 1, 'riding': 1, 'wheel': 2, 'flying': 1, 'ship': 0, 'amphibian': 2}
+forest_movement = {'foot': 2, 'riding': 3, 'wheel': 0, 'flying': 1, 'ship': 0, 'amphibian': 4}
+mountain_movement = {'foot': 3, 'riding': 0, 'wheel': 0, 'flying': 1, 'ship': 0, 'amphibian': 0}
+sea_movement = {'foot': 0, 'riding': 0, 'wheel': 0, 'flying': 1, 'ship': 2, 'amphibian': 1}
+reef_movement = {'foot': 0, 'riding': 0, 'wheel': 0, 'flying': 1, 'ship': 4, 'amphibian': 2}
+road_movement = {'foot': 1, 'riding': 1, 'wheel': 1, 'flying': 1, 'ship': 0, 'amphibian': 2}
+river_movement = {'foot': 2, 'riding': 4, 'wheel': 0, 'flying': 1, 'ship': 0, 'amphibian': 1}
+shore_movement = {'foot': 1, 'riding': 1, 'wheel': 0, 'flying': 1, 'ship': 2, 'amphibian': 2}
+flagstone_movement = {'foot': 1, 'riding': 1, 'wheel': 0, 'flying': 0, 'ship': 0, 'amphibian': 2}
 
-    'i forgot': 99,
-    '_': 99,
-    'plains': 3,
-    '.': 3,
-    'forest': 2,
-    '@': 2,
-    'mountain': 1,
-    '^': 1,
-    'sea': 0,
-    ',': 0,
-    'reef': 0,
-    '%': 0,
-    'road_1': 3,
-    '-': 3,
-    'road_2': 3,
-    '=': 3,
-    'river': 2,
-    '': 2,
-    'shore': 3,
-    '<': 3  # might not use this
+movement_info = {
+    'plains': plain_movement,
+    '.': plain_movement,
+    'forest': forest_movement,
+    '@': forest_movement,
+    'mountain': mountain_movement,
+    '^': mountain_movement,
+    'sea': sea_movement,
+    ',': sea_movement,
+    'reef': reef_movement,
+    '%': reef_movement,
+    'road': road_movement,
+    '-': road_movement,
+    'river': river_movement,
+    '{': river_movement,
+    'shore': shore_movement,
+    '<': shore_movement,
+    'flagstone': flagstone_movement,
+    ']': flagstone_movement,
 }
 
 MAX_DIMENSION = 39
@@ -137,25 +112,25 @@ def generate_initial_map():
     generated_map = [[terrain_map['sea'][0]] * config['width'] for _ in range(config['height'])]
 
     # deciding initial HQ/stronghold position
-    max_x = np.floor(config['width'] * (1-float(config['min_starting_distance']))/2)
-    max_y = np.floor(config['height'] * (1-float(config['min_starting_distance']))/2)
-    hq_y = random.randint(0, max_y)
-    hq_x = random.randint(0, max_x)
+    max_x = np.floor(config['width'] * (1 - float(config['min_starting_distance'])) / 2)
+    max_y = np.floor(config['height'] * (1 - float(config['min_starting_distance'])) / 2)
+    hq_y = int(np.floor(random.triangular(0, max_y)))
+    hq_x = int(np.floor(random.triangular(0, max_x)))
     mirror_y = config['height'] - hq_y - 1
     mirror_x = config['width'] - hq_x - 1
 
     # classic
-    generated_map, successful = create_land(generated_map, hq_x, hq_y)
-    while not successful:
-        generated_map, successful = create_land(generated_map, hq_x, hq_y)
+    # generated_map, successful = create_land(generated_map, hq_x, hq_y)
+    # while not successful:
+    #     generated_map, successful = create_land(generated_map, hq_x, hq_y)
 
-    # # box type
-    # for i in range(config['height']):
-    #     for j in range(config['width']):
-    #         if hq_y <= i <= mirror_y and (j == hq_x or j == mirror_x):
-    #             generated_map[i][j] = terrain_map['plains'][0]
-    #         if hq_x <= j <= mirror_x and (i == hq_y or i == mirror_y):
-    #             generated_map[i][j] = terrain_map['plains'][0]
+    # box type
+    for i in range(config['height']):
+        for j in range(config['width']):
+            if hq_y <= i <= mirror_y and (j == hq_x or j == mirror_x):
+                generated_map[i][j] = terrain_map['plains'][0]
+            if hq_x <= j <= mirror_x and (i == hq_y or i == mirror_y):
+                generated_map[i][j] = terrain_map['plains'][0]
 
     return generated_map, hq_y, hq_x
 
@@ -199,9 +174,9 @@ def add_land(generated_map):
             target_tile_info = land_tiles[target_tile_index]
             if target_tile_info[3] == 1 and random.uniform(0, 1) > 0:
                 append_direction = random.sample(target_tile_info[2], 1)[0]
-            elif target_tile_info[3] == 2 and random.uniform(0, 1) > .2:
+            elif target_tile_info[3] == 2 and random.uniform(0, 1) > .4:
                 append_direction = random.sample(target_tile_info[2], 1)[0]
-            elif target_tile_info[3] == 3 and random.uniform(0, 1) > .8:
+            elif target_tile_info[3] == 3 and random.uniform(0, 1) > .7:
                 append_direction = random.sample(target_tile_info[2], 1)[0]
             elif target_tile_info[3] == 4 and random.uniform(0, 1) > 1:
                 append_direction = random.sample(target_tile_info[2], 1)[0]
@@ -283,15 +258,63 @@ def place_buildings(generated_map, hq_y, hq_x):
     # placing strongholds
     generated_map[hq_y][hq_x] = terrain_map['p1 stronghold'][0]
     generated_map[config['height'] - hq_y - 1][config['width'] - hq_x - 1] = terrain_map['p2 stronghold'][0]
+    barracks_tiles = []
 
     # placing barracks and towers
-    # TODO
+    placement = 0
+    production_locations = []
+    while placement < config['barracks'] + config['towers']:
+        x = random.randint(0, config['width'] - 1)
+        y = random.randint(0, config['height'] - 1)
+        if generated_map[y][x] == terrain_map['plains'][0]:
+            if np.sqrt((x - hq_x) ** 2 + (y - hq_y) ** 2) > .3 * np.sqrt(config['width'] ** 2 + config['height'] ** 2):
+                continue
+            if placement < config['barracks']:
+                generated_map[y][x] = terrain_map['neutral barracks'][0]
+                generated_map[config['height'] - y - 1][config['width'] - x - 1] = terrain_map['neutral barracks'][0]
+                barracks_tiles.append((y, x))
+            else:
+                generated_map[y][x] = terrain_map['neutral tower'][0]
+                generated_map[config['height'] - y - 1][config['width'] - x - 1] = terrain_map['neutral tower'][0]
+            production_locations.append([y, x])
+            placement += 1
 
     # placing villages
-    # TODO
-
+    board = flood_flow(production_locations)
+    village_locations = []
+    for y in range(len(board)):
+        for x in range(len(board[y])):
+            if board[y][x] % 5 == 0 and generated_map[y][x] == terrain_map['plains'][0]:
+                village_locations.append([y, x])
+    village_locations = random.sample(village_locations, config['villages'])
+    for location in village_locations:
+        generated_map[location[0]][location[1]] = terrain_map['neutral village'][0]
+        generated_map[config['height'] - location[0] - 1][config['width'] - location[1] - 1] = terrain_map['neutral village'][0]
     return generated_map
 
+
+def flood_flow(flow_list: list = []):
+    board = [[999] * config['width'] for _ in range(config['height'])]
+    for i in flow_list:
+        board[i[0]][i[1]] = 0
+    while len(flow_list) != 0:
+        flow_cell = flow_list.pop(0)
+        if flow_cell[1] + 1 < config['width'] and board[flow_cell[0]][flow_cell[1] + 1] > board[flow_cell[0]][flow_cell[1]] + 1:
+            board[flow_cell[0]][flow_cell[1] + 1] = board[flow_cell[0]][flow_cell[1]] + 1
+            flow_list.append([flow_cell[0], flow_cell[1] + 1])
+
+        if flow_cell[1] - 1 > 0 and board[flow_cell[0]][flow_cell[1] - 1] > board[flow_cell[0]][flow_cell[1]] + 1:
+            board[flow_cell[0]][flow_cell[1] - 1] = board[flow_cell[0]][flow_cell[1]] + 1
+            flow_list.append([flow_cell[0], flow_cell[1] - 1])
+
+        if flow_cell[0] + 1 < config['height'] and board[flow_cell[0] + 1][flow_cell[1]] > board[flow_cell[0]][flow_cell[1]] + 1:
+            board[flow_cell[0] + 1][flow_cell[1]] = board[flow_cell[0]][flow_cell[1]] + 1
+            flow_list.append([flow_cell[0] + 1, flow_cell[1]])
+
+        if flow_cell[0] - 1 > 0 and board[flow_cell[0] - 1][flow_cell[1]] > board[flow_cell[0]][flow_cell[1]] + 1:
+            board[flow_cell[0] - 1][flow_cell[1]] = board[flow_cell[0]][flow_cell[1]] + 1
+            flow_list.append([flow_cell[0] - 1, flow_cell[1]])
+    return board
 
 def calculate_openness(generated_map):
     openness = np.array([[0] * config['width'] for _ in range(config['height'])])
@@ -317,7 +340,14 @@ def calculate_openness(generated_map):
     return openness, avg_openness
 
 
-def calculate_movement(generated_map, max_move: int = 5):
+# not complete
+def flood_move(generated_map, starting_tile=(0, 0), movement_type: str = 'foot'):
+    movement = 0
+    flood_que = [starting_tile]
+    return movement
+
+
+def calculate_movement(generated_map, max_move: int = 4, movement_type: str = 'foot'):
     movement = np.array([[0] * config['width'] for _ in range(config['height'])])
     for y in range(config['height']):
         for x in range(config['width']):
@@ -332,7 +362,11 @@ def calculate_movement(generated_map, max_move: int = 5):
                     distance = abs(y - i) + abs(x - j)
                     if distance == 0:
                         continue
-                    movement[y][x] += movement_info[generated_map[i][j]] / distance
+                    elif movement_info.__contains__(generated_map[i][j]):
+                        if movement_info[generated_map[i][j]]['foot'] != 0:
+                            movement[y][x] += (3 - movement_info[generated_map[i][j]]['foot']) / distance
+                    else:
+                        movement[y][x] += 2 / distance
     # calculate average movement
     mov_values = []
     for i in movement.flatten():
@@ -378,7 +412,8 @@ def place_terrain(generated_map):
 
 
 def place_terrain_fast(generated_map):
-    mountain_count = int(float(config['mountain_ratio']) * config['width'] * config['height'] * float(config['land_ratio']))
+    mountain_count = int(
+        float(config['mountain_ratio']) * config['width'] * config['height'] * float(config['land_ratio']))
     forest_count = int(float(config['forest_ratio']) * config['width'] * config['height'] * float(config['land_ratio']))
 
     # adding mountains
@@ -420,9 +455,9 @@ if __name__ == '__main__':
     write_map(generated_map, config['key'])
 
     # debug stuff
-    map_movement, _ = calculate_movement(generated_map)
-    for row in map_movement:
-        for val in row:
-            print(round(val, 3), end=',')
-        print('')
-    print('\n\n')
+    # map_movement, _ = calculate_movement(generated_map)
+    # for row in map_movement:
+    #     for val in row:
+    #         print(round(val, 3), end=',')
+    #     print('')
+    # print('\n\n')

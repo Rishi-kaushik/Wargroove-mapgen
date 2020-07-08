@@ -7,22 +7,22 @@
     width : 20
 
     # land to sea ratio; at (1 produce all land)
-    land_ratio : .6
+    land_ratio : .7
 
-    # how open or choke-y the map should be (not used)
+    # how open or choke-y the map should be (NOT IMPLEMENTED)
     openness : 24
 
     # terrain ratio
     mountain_ratio : .03
-    forest_ratio : .08
+    forest_ratio : .05
 
     # minimum distances between player strongholds (e.g. .5 => at least half the map apart)
     min_starting_distance : .2
 
-    # number of building per player TODO
+    # number of building per player
     villages : 3
     barracks : 2
-    ports : 0
+    ports : 0 # TODO
     towers : 1
 
     # (1: Recommended) set as 1 to remove any sea tile not adjacent to other sea tiles
