@@ -3,5 +3,5 @@ This ia a map generator for wargroove and advance wars
 How to use:
 step 1 - open config.hjson and edit the setting for the map
 step 2 - run main.py (needs python)
-step 3 - copy the generated map and paste it in 'http://ruinedshadows.com/php/awbwMapEditor.ph'
+step 3 - copy the generated map and paste it in 'http://ruinedshadows.com/php/awbwMapEditor.php'
 the map is also stored in 'Generated maps/<map file>', name of the map file is the seed for tha map
